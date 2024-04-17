@@ -61,7 +61,6 @@ public class Main {
                 System.out.println("1) Opción 1.");
                 System.out.println("2) Opción 2.");
                 System.out.println("3) Opción 3.");
-                System.out.println("4) Salir.");
 
                 System.out.println("4) Salir.");
                 System.out.println("Ingrese opción:");
