@@ -1,13 +1,9 @@
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import javax.swing.*;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.google.gson.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -16,61 +12,113 @@ public class Main {
     public static void main(String[] args) {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
-        /*System.out.printf("Hello and welcome!");
-
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);*/
         try{
             // Setting URL
             String url_str = "https://v6.exchangerate-api.com/v6/bc078a0e2f4b47dd5ac69d2e/latest/USD";
 
-            // Making Request
-            URL url = new URL(url_str);
-            HttpURLConnection request = (HttpURLConnection) url.openConnection();
-            request.connect();
+            /*----------------------------------------------*/
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url_str))
+                    .build();
 
-            // Convert to JSON
-            JsonParser jp = new JsonParser();
-            JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-            JsonObject jsonobj = root.getAsJsonObject();
+            HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
 
-            // Accessing object
-            String req_result = jsonobj.get("result").getAsString();
+            String respuestaHttp= response.body();
 
-            JOptionPane.showMessageDialog(null,"Mensaje: " + req_result);
+            JsonObject jsonObjectMon = new Gson().fromJson(respuestaHttp, JsonObject.class);
 
-            JsonObject conversion = jsonobj.getAsJsonObject("conversion_rates");
+            JsonObject conversion = jsonObjectMon.getAsJsonObject("conversion_rates");
 
-            JOptionPane.showMessageDialog(null,"Mensaje:PASO ARRAY ");
-
-            //String salida = jsonobj.get("base_code").getAsString();
-
-            //JOptionPane.showMessageDialog(null,"Mensaje: " + salida);
-
-            String moneda = conversion.getAsJsonObject().get("AED").getAsString();
-
-            JOptionPane.showMessageDialog(null,"Mensaje número: " + moneda);
+            /*----------------------------------------------*/
 
             Scanner op = new Scanner(System.in);
 
             int opcion = 0;
 
-            while(opcion!=4){
-                System.out.println("1) Opción 1.");
-                System.out.println("2) Opción 2.");
-                System.out.println("3) Opción 3.");
+            while(opcion!=6){
+                System.out.println("\n----------------------------------------------------------------");
+                System.out.println("1) Convertir de Pesos Argentinos a Dólares Estadounidenses.");
+                System.out.println("2) Convertir de Dólares Estadounidenses a Pesos Argentinos.");
+                System.out.println("3) Convertir de Pesos Brasileros a Dólares Estadounidenses.");
+                System.out.println("4) Convertir de Dólares Estadounidenses a Pesos Brasileros.");
+                System.out.println("5) Convertir de Euros a Pesos Brasileros.");
 
-                System.out.println("4) Salir.");
+                System.out.println("6) Salir.");
                 System.out.println("Ingrese opción:");
                 opcion = op.nextInt();
-                System.out.println("La opción elegida es: " + opcion + ". Asegurado.");
+
+                double suma;
+                String cotMoneda;
+                DecimalFormat df = new DecimalFormat("#,##");
+
+                switch (opcion){
+
+
+                    case 1:
+                        System.out.println("Ingrese pesos argentinos a convertir:");
+                        suma = op.nextDouble();
+                        cotMoneda = conversion.getAsJsonObject().get("ARS").getAsString();
+                        PesosArgentinos dol_usd = new PesosArgentinos(Double.parseDouble(cotMoneda));
+                        System.out.println("Un dolar equivale a " + cotMoneda + " pesos argentinos.");
+                        System.out.println("La conversión actual de " + suma + " pesos argentinos es de " + dol_usd.cambiarADolares(suma) + " dólares.");
+
+                        break;
+
+                    case 2:
+                        System.out.println("Ingrese dólares a convertir:");
+                        suma = op.nextDouble();
+                        cotMoneda = conversion.getAsJsonObject().get("ARS").getAsString();
+                        PesosArgentinos ars_usd = new PesosArgentinos(Double.parseDouble(cotMoneda));
+                        System.out.println("Un dolar equivale a " + cotMoneda + " pesos argentinos.");
+                        System.out.println("La conversión actual de " + suma + " dólares es de " + ars_usd.convertir(suma) + " pesos argentinos.");
+
+                        break;
+
+                    case 3:
+                        System.out.println("Ingrese pesos brasileros a convertir:");
+                        suma = op.nextDouble();
+                        cotMoneda = conversion.getAsJsonObject().get("BRL").getAsString();
+                        PesosBrasileros brl_usd = new PesosBrasileros(Double.parseDouble(cotMoneda));
+                        System.out.println("Un dólar equivale a " + cotMoneda + " pesos brasileros.");
+                        System.out.println("La conversión actual de " + suma + " pesos brasileros es de " + brl_usd.cambiarADolares(suma) + " dólares.");
+
+                        break;
+
+                    case 4:
+                        System.out.println("Ingrese dólares a convertir:");
+                        suma = op.nextDouble();
+                        cotMoneda = conversion.getAsJsonObject().get("BRL").getAsString();
+                        PesosBrasileros usd_brl = new PesosBrasileros(Double.parseDouble(cotMoneda));
+                        System.out.println("Un dólar equivale a " + cotMoneda + " pesos brasileros.");
+                        System.out.println("La conversión actual de " + suma + " dólares es de " + usd_brl.convertir(suma) + " pesos brasileros.");
+
+                        break;
+                    case 5:
+                        System.out.println("Ingrese euros a convertir:");
+                        suma = op.nextDouble();
+                        cotMoneda = conversion.getAsJsonObject().get("EUR").getAsString();
+                        Euros eur_brl = new Euros(Double.parseDouble(cotMoneda));
+                        double dolares = eur_brl.cambiarADolares(suma);
+                        cotMoneda = conversion.getAsJsonObject().get("BRL").getAsString();
+                        PesosBrasileros brl_eur = new PesosBrasileros(Double.parseDouble(cotMoneda));
+                        System.out.println(suma + " euros, equivalen a " + dolares + " dolares.");
+                        System.out.println("La conversión actual de " + suma + " euros es de " + brl_eur.convertir(dolares) + " pesos brasileros.");
+
+                        break;
+                }
+
 
             }
             System.out.println("Gracias por utilizar el conversor de monedas.");
+
+
+
         }catch (Exception ex){
             System.out.println(ex.getMessage());
         }
+
+
     }
+
 }
