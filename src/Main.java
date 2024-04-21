@@ -50,7 +50,7 @@ public class Main {
 
                 double suma;
                 String cotMoneda;
-                DecimalFormat df = new DecimalFormat("#,##");
+                DecimalFormat df = new DecimalFormat("#.##");
 
                 switch (opcion){
 
@@ -60,8 +60,8 @@ public class Main {
                         suma = op.nextDouble();
                         cotMoneda = conversion.getAsJsonObject().get("ARS").getAsString();
                         PesosArgentinos dol_usd = new PesosArgentinos(Double.parseDouble(cotMoneda));
-                        System.out.println("Un dolar equivale a " + cotMoneda + " pesos argentinos.");
-                        System.out.println("La conversión actual de " + suma + " pesos argentinos es de " + dol_usd.cambiarADolares(suma) + " dólares.");
+                        System.out.println("Un dolar equivale a " + df.format(Double.parseDouble(cotMoneda)) + " pesos argentinos.");
+                        System.out.println("La conversión actual de " + df.format(suma) + " pesos argentinos es de " + df.format(dol_usd.cambiarADolares(suma)) + " dólares.");
 
                         break;
 
@@ -70,8 +70,8 @@ public class Main {
                         suma = op.nextDouble();
                         cotMoneda = conversion.getAsJsonObject().get("ARS").getAsString();
                         PesosArgentinos ars_usd = new PesosArgentinos(Double.parseDouble(cotMoneda));
-                        System.out.println("Un dolar equivale a " + cotMoneda + " pesos argentinos.");
-                        System.out.println("La conversión actual de " + suma + " dólares es de " + ars_usd.convertir(suma) + " pesos argentinos.");
+                        System.out.println("Un dolar equivale a " + df.format(Double.parseDouble(cotMoneda)) + " pesos argentinos.");
+                        System.out.println("La conversión actual de " + df.format(suma) + " dólares es de " + df.format(ars_usd.convertir(suma)) + " pesos argentinos.");
 
                         break;
 
@@ -80,8 +80,8 @@ public class Main {
                         suma = op.nextDouble();
                         cotMoneda = conversion.getAsJsonObject().get("BRL").getAsString();
                         PesosBrasileros brl_usd = new PesosBrasileros(Double.parseDouble(cotMoneda));
-                        System.out.println("Un dólar equivale a " + cotMoneda + " pesos brasileros.");
-                        System.out.println("La conversión actual de " + suma + " pesos brasileros es de " + brl_usd.cambiarADolares(suma) + " dólares.");
+                        System.out.println("Un dólar equivale a " + df.format(Double.parseDouble(cotMoneda)) + " pesos brasileros.");
+                        System.out.println("La conversión actual de " + df.format(suma) + " pesos brasileros es de " + df.format(brl_usd.cambiarADolares(suma)) + " dólares.");
 
                         break;
 
@@ -90,8 +90,8 @@ public class Main {
                         suma = op.nextDouble();
                         cotMoneda = conversion.getAsJsonObject().get("BRL").getAsString();
                         PesosBrasileros usd_brl = new PesosBrasileros(Double.parseDouble(cotMoneda));
-                        System.out.println("Un dólar equivale a " + cotMoneda + " pesos brasileros.");
-                        System.out.println("La conversión actual de " + suma + " dólares es de " + usd_brl.convertir(suma) + " pesos brasileros.");
+                        System.out.println("Un dólar equivale a " + df.format(Double.parseDouble(cotMoneda)) + " pesos brasileros.");
+                        System.out.println("La conversión actual de " + df.format(suma) + " dólares es de " + df.format(usd_brl.convertir(suma)) + " pesos brasileros.");
 
                         break;
                     case 5:
@@ -102,8 +102,8 @@ public class Main {
                         double dolares = eur_brl.cambiarADolares(suma);
                         cotMoneda = conversion.getAsJsonObject().get("BRL").getAsString();
                         PesosBrasileros brl_eur = new PesosBrasileros(Double.parseDouble(cotMoneda));
-                        System.out.println(suma + " euros, equivalen a " + dolares + " dolares.");
-                        System.out.println("La conversión actual de " + suma + " euros es de " + brl_eur.convertir(dolares) + " pesos brasileros.");
+                        System.out.println(suma + " euros, equivalen a " + df.format(dolares) + " dolares.");
+                        System.out.println("La conversión actual de " + df.format(suma) + " euros es de " + df.format(brl_eur.convertir(dolares)) + " pesos brasileros.");
 
                         break;
                 }
